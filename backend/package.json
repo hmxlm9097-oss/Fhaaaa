@@ -1,0 +1,23 @@
+{
+  "name": "h4xml-cloud-phone-backend",
+  "version": "1.0.0",
+  "description": "H4XML Cloud Phone control plane API, Android emulator ADB bridge, WebSocket remote input server, and WebRTC signaling gateway.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "speakeasy": "^2.0.0",
+    "uuid": "^9.0.1",
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

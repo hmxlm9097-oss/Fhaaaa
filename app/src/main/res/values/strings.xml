@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">H4XML Cloud</string>
+    <string name="brand_subtitle">Cloud Phone &amp; Remote Telemetry Console</string>
+    <string name="monitoring_indicator_active">LIVE MONITORING ACTIVE • AUTHORIZED SESSION</string>
+    <string name="monitoring_indicator_standby">MONITORING STANDBY • NO HIDDEN CAPTURE</string>
+    <string name="action_sign_in">Sign In</string>
+    <string name="action_register">Create Account</string>
+    <string name="action_connect_server">Test Server Connection</string>
+    <string name="action_disconnect_session">Disconnect Remote Session</string>
+</resources>

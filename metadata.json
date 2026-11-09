@@ -1,0 +1,6 @@
+{
+  "name": "H4XML Cloud",
+  "description": "H4XML Cloud Phone remote control, virtual device orchestration, telemetry monitoring, and security platform.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

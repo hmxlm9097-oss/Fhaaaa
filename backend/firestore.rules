@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidCloudPhone(data) {
+      return data.ownerId == request.auth.uid &&
+             data.name is string && data.name.size() >= 2 && data.name.size() <= 60 &&
+             data.androidVersion is string && data.androidVersion.size() <= 30 &&
+             data.cpuCores is int && data.cpuCores >= 1 && data.cpuCores <= 32 &&
+             data.ramGb is int && data.ramGb >= 1 && data.ramGb <= 64 &&
+             data.storageGb is int && data.storageGb >= 16 && data.storageGb <= 1024 &&
+             data.status in ['STOPPED', 'STARTING', 'RUNNING', 'LOCAL_ONLY'];
+    }
+
+    function isValidConsentRecord(data) {
+      return data.ownerId == request.auth.uid &&
+             data.locationConsent is bool &&
+             data.notificationConsent is bool &&
+             data.visibleIndicatorEnabled is bool;
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create, update: if isOwner(userId) && request.resource.data.uid == userId;
+      allow delete: if false;
+
+      match /cloud_phones/{deviceId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(deviceId) && isValidCloudPhone(request.resource.data);
+        allow update: if isOwner(userId) && isValidId(deviceId) && isValidCloudPhone(request.resource.data);
+        allow delete: if isOwner(userId) && isValidId(deviceId);
+      }
+
+      match /consent_policies/{policyId} {
+        allow get, list: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidId(policyId) && isValidConsentRecord(request.resource.data);
+        allow delete: if isOwner(userId);
+      }
+
+      match /activity_logs/{logId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(logId) && request.resource.data.ownerId == userId;
+        allow update, delete: if false;
+      }
+
+      match /location_history/{entryId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(entryId) && request.resource.data.ownerId == userId;
+        allow delete: if isOwner(userId);
+      }
+    }
+  }
+}

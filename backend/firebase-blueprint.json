@@ -1,0 +1,60 @@
+{
+  "entities": {
+    "CloudPhone": {
+      "title": "CloudPhone",
+      "description": "Virtual Android phone instance provisioned on a host emulator node.",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string" },
+        "name": { "type": "string" },
+        "androidVersion": { "type": "string" },
+        "cpuCores": { "type": "integer" },
+        "ramGb": { "type": "integer" },
+        "storageGb": { "type": "integer" },
+        "region": { "type": "string" },
+        "status": { "type": "string", "enum": ["STOPPED", "STARTING", "RUNNING", "LOCAL_ONLY"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerId", "name", "androidVersion", "cpuCores", "ramGb", "storageGb", "status"]
+    },
+    "ConsentPolicy": {
+      "title": "ConsentPolicy",
+      "description": "Explicit user authorization and visible monitoring indicator policy.",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string" },
+        "locationConsent": { "type": "boolean" },
+        "notificationConsent": { "type": "boolean" },
+        "visibleIndicatorEnabled": { "type": "boolean" }
+      },
+      "required": ["ownerId", "locationConsent", "notificationConsent", "visibleIndicatorEnabled"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Append-only security and control audit log event.",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string" },
+        "category": { "type": "string" },
+        "action": { "type": "string" },
+        "detail": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerId", "category", "action", "detail"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/cloud_phones/{deviceId}": {
+      "schema": { "$ref": "#/entities/CloudPhone" },
+      "description": "User-isolated virtual Android cloud phones."
+    },
+    "/users/{userId}/consent_policies/{policyId}": {
+      "schema": { "$ref": "#/entities/ConsentPolicy" },
+      "description": "Explicit telemetry and remote monitoring consent policies."
+    },
+    "/users/{userId}/activity_logs/{logId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Immutable chronological audit trail."
+    }
+  }
+}

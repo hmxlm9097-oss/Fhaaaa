@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  control-gateway:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: sh -c "npm install && npm start"
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - JWT_SECRET=${JWT_SECRET:-replace-with-strong-secret}
+    restart: unless-stopped
+
+  coturn:
+    image: coturn/coturn:latest
+    network_mode: host
+    command: ["-n", "--log-file=stdout", "--lt-cred-mech", "--realm=h4xml.cloud"]
+    restart: unless-stopped
